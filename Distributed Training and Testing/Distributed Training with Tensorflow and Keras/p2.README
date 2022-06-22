@@ -1,0 +1,33 @@
+Group Author info:
+psomash Prakruthi Somashekarappa
+rbraman Radhika B Raman
+srames22 Srivatsan Ramesh
+
+1) Time both serial and parallel versions, compare the times and reason about them.
+
+Serial version for epochs=15:
+- Time = 122.94 seconds
+- Train accuracy: 0.9658
+- Test accuracy: 0.7318999767303467
+
+Parallel version for epochs=15:
+- Time = 261.67 seconds
+- Train accuracy: 0.9299
+- Test accuracy: 0.7346000075340271
+
+From the observations we see that the serial version takes less time compared to the parallel version. This could be because of the communication overhead between the nodes. As the size of the dataset increases significantly, the serial version might take longer to train and test the data compared to the parallel version as the computation overhead will be greater than the communication overhead.
+
+2)Find additional tuning techniques to speed up the training while getting the same accuracy as serial for any number of epochs with the same initializations.
+- In order to speed up the training while getting the same accuracy as serial for any number of epochs with the same initializations, we tried tuning parameters such as batch size and number of epochs in our parallel version. We were able to observe the following results:
+
+3 epochs:
+- Serial version took 23.17 seconds, with a train accuracy of 0.72 and test accuracy of 0.72
+- Parallel version took 55.32 seconds, for a batch size of 128. Train accuracy was 0.65 and test accuracy was 0.65
+- Parallel version took 36.92 seconds for a batch size of 256. Train accuracy was 0.59 and test accuracy was 0.58
+
+6 epochs:
+- Serial version took 40.02 seconds, with a train accuracy of 0.7470 and test accuracy of 0.7469
+- Parallel version took 96.72 seconds, for a batch size of 128. Train accuracy was 0.76 and test accuracy was 0.68
+- Parallel version took 62.42 seconds for a batch size of 256. Train accuracy was 0.74 and test accuracy was 0.67
+
+From the above experiment, we believe that increasing the number of epochs along with an increase in batch size improves the training time of the model with respect to the parallel code, with an accuracy closer to the serial version. 
