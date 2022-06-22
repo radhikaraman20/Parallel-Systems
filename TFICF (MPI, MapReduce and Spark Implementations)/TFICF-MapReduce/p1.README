@@ -1,0 +1,43 @@
+Single Author info:
+rbraman Radhika B Raman
+
+Explanation of how I implemented each of the steps in my TFICF algorithm:
+============================================================================
+
+As mentioned in the problem statement, this is a program that computes a TF-ICF value for each word in a corpus of documents using MapReduce. I have accomplished the TFICF calculation in three steps/jobs, as explained below:
+
+Job 1: Word Count
+-----------------
+The main purpose of this job is to count the number of times each legal word appears in each input document. This job consists of a Mapper and Reducer, which were part of the skeleton provided. 
+
+I have made use of Java StringTokenizer in WCMapper's map method in order to split each individual line into words/tokens. Each token is then processed in order to remove special characters/symbols such as ", ', (, ), ;, :, [, ], etc. All such special characters have been replaced by "" (nothing) in order to eliminate them from the token. This would imply that words within [] are considered as legal words, such as chorus, verse, etc.
+
+Further, I have also discarded any words or tokens if they have a length of 0, if they start with a digit, if they start with -, etc, in order to ensure that all words start with a letter. 
+
+Post all this processing, the tokens are being converted into lower case, and the required output is being written in the required format, which is then handled by WCReducer, where the total count of a given legal word is calculated (reduced) in the reduce method.
+
+
+Job 2: Document Size
+---------------------
+The main purpose of this second job is to count the total number of words in each document which is the term frequency. 
+
+The DSMapper class consists of a map method that splits the input at "\t". The "word@document" value is then split at "@" to obtain the word and document seperately. 
+
+The output of required format "word=wordCount" is then created, post which a context write is made to DSReducer, where the reduce method takes the input ( document , (word=wordCount) ). 
+
+The code I have written will then obtain the number of words in each document (term frequency) and the required output is formulated. Finally, the output of format ( (word@document) , (wordCount/docSize) ) is sent to be processed by TFICFMapper class.
+
+
+Job 3: TFICF
+-------------
+The main purpose of this final job is to count the number of total documents in each corpus, the number of documents containing each word, and finally calculate the TFICF value for each word. The TFICFMapper class consists of a map method that splits the input ( (word@document) , (wordCount/docSize) ) at "\t". 
+
+"word@document" is further split at "@" and the required output of format ( word , (document=wordCount/docSize) ) is formulated, to be further processed by the reduce method in the TFICFReducer class.
+
+The reduce method in the TFICFReducer class iterates through each "document=wordCount/docSize" input, splits at "=", and increments the "num_docs_with_key" value.
+
+Post this, the term frequency and inverse document frequency for each word is calculated seperately, and math.log10() is being used to calculate the final TFICF value.
+
+In the end, the output of required format ( (document@word) , TFICF ) is created, and put into the tficfMap for sorting.
+
+The final outputs of my program implementation can be seen in the output0 and output1 folders.
