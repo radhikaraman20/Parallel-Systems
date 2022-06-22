@@ -1,0 +1,151 @@
+Group Author info:
+psomash Prakruthi Somashekarappa 
+rbraman Radhika B Raman
+srames22 Srivatsan Ramesh
+
+--> Report the test result of yolov3 model in p3.README with mAP.
+
+[rbraman@c48 PyTorch-YOLOv3]$ poetry run yolo-test --weights /mnt/beegfs/hzhang47/hw7/weights/yolov3.weights --d hw7.data
+Environment information:
+System: Linux 4.19.110-300.el7.x86_64
+Current Version: pytorchyolo 1.6.2
+Current Commit Hash: 3f7f04b
+Command line arguments: Namespace(batch_size=8, conf_thres=0.01, data='hw7.data', img_size=416, iou_thres=0.5, model='config/yolov3.cfg', n_cpu=8, nms_thres=0.4, verbose=False, weights='/mnt/beegfs/hzhang47/hw7/weights/yolov3.weights')
+Validating: 100%|████████████████████████████████████████████████████████████████████████| 620/620 [03:26<00:00,  3.00it/s]
+Computing AP: 100%|████████████████████████████████████████████████████████████████████████| 80/80 [00:02<00:00, 37.75it/s]
++-------+----------------+---------+
+| Index | Class          | AP      |
++-------+----------------+---------+
+| 0     | person         | 0.71421 |
+| 1     | bicycle        | 0.47931 |
+| 2     | car            | 0.57038 |
+| 3     | motorbike      | 0.67145 |
+| 4     | aeroplane      | 0.78190 |
+| 5     | bus            | 0.83567 |
+| 6     | train          | 0.81223 |
+| 7     | truck          | 0.54086 |
+| 8     | boat           | 0.41651 |
+| 9     | traffic light  | 0.47742 |
+| 10    | fire hydrant   | 0.83048 |
+| 11    | stop sign      | 0.78453 |
+| 12    | parking meter  | 0.57470 |
+| 13    | bench          | 0.32272 |
+| 14    | bird           | 0.45339 |
+| 15    | cat            | 0.78284 |
+| 16    | dog            | 0.80090 |
+| 17    | horse          | 0.79511 |
+| 18    | sheep          | 0.62210 |
+| 19    | cow            | 0.59054 |
+| 20    | elephant       | 0.87699 |
+| 21    | bear           | 0.81899 |
+| 22    | zebra          | 0.81119 |
+| 23    | giraffe        | 0.83643 |
+| 24    | backpack       | 0.30698 |
+| 25    | umbrella       | 0.58626 |
+| 26    | handbag        | 0.19768 |
+| 27    | tie            | 0.51685 |
+| 28    | suitcase       | 0.50459 |
+| 29    | frisbee        | 0.77787 |
+| 30    | skis           | 0.40712 |
+| 31    | snowboard      | 0.49151 |
+| 32    | sports ball    | 0.55262 |
+| 33    | kite           | 0.45789 |
+| 34    | baseball bat   | 0.55291 |
+| 35    | baseball glove | 0.48796 |
+| 36    | skateboard     | 0.70707 |
+| 37    | surfboard      | 0.59472 |
+| 38    | tennis racket  | 0.71820 |
+| 39    | bottle         | 0.43342 |
+| 40    | wine glass     | 0.51521 |
+| 41    | cup            | 0.47459 |
+| 42    | fork           | 0.38597 |
+| 43    | knife          | 0.28379 |
+| 44    | spoon          | 0.23506 |
+| 45    | bowl           | 0.47721 |
+| 46    | banana         | 0.33197 |
+| 47    | apple          | 0.18324 |
+| 48    | sandwich       | 0.47851 |
+| 49    | orange         | 0.31057 |
+| 50    | broccoli       | 0.31536 |
+| 51    | carrot         | 0.20116 |
+| 52    | hot dog        | 0.42959 |
+| 53    | pizza          | 0.59677 |
+| 54    | donut          | 0.48375 |
+| 55    | cake           | 0.51326 |
+| 56    | chair          | 0.42297 |
+| 57    | sofa           | 0.59768 |
+| 58    | pottedplant    | 0.43593 |
+| 59    | bed            | 0.67013 |
+| 60    | diningtable    | 0.45644 |
+| 61    | toilet         | 0.77880 |
+| 62    | tvmonitor      | 0.74716 |
+| 63    | laptop         | 0.70993 |
+| 64    | mouse          | 0.72828 |
+| 65    | remote         | 0.49245 |
+| 66    | keyboard       | 0.68147 |
+| 67    | cell phone     | 0.39296 |
+| 68    | microwave      | 0.73668 |
+| 69    | oven           | 0.50766 |
+| 70    | toaster        | 0.10558 |
+| 71    | sink           | 0.56072 |
+| 72    | refrigerator   | 0.69158 |
+| 73    | book           | 0.15731 |
+| 74    | clock          | 0.69855 |
+| 75    | vase           | 0.52692 |
+| 76    | scissors       | 0.31354 |
+| 77    | teddy bear     | 0.56984 |
+| 78    | hair drier     | 0.09091 |
+| 79    | toothbrush     | 0.34736 |
++-------+----------------+---------+
+---- mAP 0.53914 ----
+
+--> Use time.time() in Python to measure the time spend at image data loading, inference, and total testing time.
+Ans.
+Time spent for image data loading: 0.11570000648498535 seconds
+Time spent for inference: 209.24945855140686 seconds
+Time spent for total testing: 227.5732707977295 seconds
+
+--> Tune the parameters of torch.utils.data.DataLoader function in test.py based on the PyTorch docs . Report your configuration and execution time speedups
+Ans. We tuned the batch_size parameter of the torch.utils.data.DataLoader function in test.py.  We tuned this parameter with values of 8 and 16, and we could observe that the total inference time and the total test time reduced as the batch size increased. 
+
+For batch size 8:
+Total inference time: 65.98106265068054 seconds
+Total test time: 74.30374574661255 seconds
+
+For batch size 16:
+Total inference time: 61.91685461997986 seconds
+Total test time: 70.17193698883057 seconds
+
+We also tuned the num_workers parameter with values 0 and 2. When num_workers was 0 (data loaded on the main subprocess), we could observe that the validation step took much longer than when num_workers was set to 2. This is probably because more workers loading the data reduces the overhead on a single process.
+
+--> Does the testing job on a single GPU node reach the real-time processing speed (30 FPS)?
+Ans. On a single GPU node, we recorded a testing time of 227.5732707977295 seconds. Since the dataset consists of 4954 images, 4954/227.5732707977295 is approximately 21.76 FPS. This shows that testing job on a single GPU node does not reach the real-time processing speed of 30 FPS.
+
+--> Based the break-down timing on testing, which part is the bottleneck?
+Ans. Based the break-down timing on testing, the inference step seems to be the bottleneck as it consumes majority of the testing time, as per the results observed.
+
+--> Can you provide some ideas to speedup the most time consuming part?
+Ans. In order to speedup the most time consuming part which is the inference step, we could tune a few hyperparamteres such as batch size (since this reduces the inference time as shown above). We could also tune parameters such as iou_thres and conf_thres in order to speedup the inference step.
+
+--> Describe the implementation details of how you calculate final result (AP and mAP) from result of each rank?
+Ans. As per the requirements, each rank tests half of the image data. We handle this by using the DataPartitioner class to partition the data among both the processes. Next, each rank evaluates/tests its respective data partition. After this, rank 1 sends it predicted labels, predicted scores, true positives and labels to rank 0. Rank 0 receieves this data from rank 1 and concatenates rank 1's predicted labels, predicted scores, true positives and labels with its own. Lastly, these final concatenated values are used to call the ap_per_class() function, which calculated the required AP and mAP results.
+
+--> Does the testing job on two GPU nodes reach the real-time processing speed (30 FPS)?
+Ans. On two GPU nodes, we recorded a testing time of 74.51373505592346 seconds. Since the dataset consists of 4954 images, 4954/74.51373505592346 is approximately 66.48 FPS. This shows that testing job on two GPU nodes reaches and exceeds the real-time processing speed of 30 FPS.
+
+
+--> Does the data parallel testing on two GPU nodes perform better than the one node scenario? Why or why not?
+Ans. Yes, we believe that the parallel testing on two GPU nodes perform better than the one node scenario. This is because instead of a single node testing the entire image data, this task is now split between 2 nodes, where each node tests only half of the image data, in parallel. This would drastically reduce the time taken for testing, since 2 nodes work in parallel to test the image data, thus doubling the processing power and reducing the time taken. 
+
+Consider a batch size of 8. 
+
+Time spent for total testing on single node (as mentioned in the beginning): 227.5732707977295 seconds. 
+Time spent for total testing on 2 GPU nodes: 74.30374574661255 seconds
+
+A drastic reduction in the total testing time can be seen, when 2 GPU nodes are used, which shows that testing on two GPU nodes perform better than the one node scenario.
+
+--> Does the tuning of dataloader help? Why or why not?
+Ans. Yes, tuning of dataloader does help. As mentioned above, we tuned the batch_size parameter of the torch.utils.data.DataLoader function in test.py.  We tuned this parameter with values of 8 and 16, and we could observe that the total inference time and the total test time reduced as the batch size increased, thus confirming that tuning of dataloader helps in improving the testing performance.
+
+
+
