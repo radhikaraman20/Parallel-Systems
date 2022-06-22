@@ -1,0 +1,16 @@
+Single Author info:
+rbraman Radhika B Raman
+
+Problem Statement:
+~~~~~~~~~~~~~~~~~~
+As the question mentions, the aim here was to write a CUDA code to calculate the integral of cos(x) function by parallelizing the area accumulation part of the serial program p2.c. The ultimate goal here is to learn how to compile and execute a CUDA program.
+
+
+Implementation details:
+~~~~~~~~~~~~~~~~~~~~~~~
+The implementation of this CUDA code begins by defining and declaring host(CPU) and device(GPU) arrays/variables that would be required to calculate the integral value. Memory for device variables has been allocated using the cudaMalloc() function. Post this, the constructed grid/area is copied to the corresponding device variable and the kernel configuration is set by calculating number of threads and blocks needed to create the grid.  
+
+In the kernel function/call, the "cos()" function is being applied on every grid point and this is being stored in the "dev_y" array (device memory). In order to find the cumulative area, the given formula is applied on each element present in the dev_y array and this is stored in dev_area. A copy of this is created in order to loop through the elements and compute the cumulative sum. The cumulative sum for each point, which is the integral value for that point is returned back to be utilized by the host/CPU. The host prints these values into a file, which is used to generate the final plot, that depicts the cosine function and its integral value.
+
+In this CUDA version of p2.c, each thread in the GPU computes the cosine value and areas, which is done in parallel. This parallel computation of values leads to faster execution of the program, when compared to the serial version of the same.  
+
