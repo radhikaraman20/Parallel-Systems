@@ -1,0 +1,27 @@
+Single Author info:
+rbraman Radhika B Raman
+
+Explanation of how I implemented each of the steps of the TFICF algorithm on Spark:
+======================================================================
+As provided in the code skeleton, the TFICF algorithm consists of 3 jobs: TF Job, ICF Job, and the TF * ICF job. 
+
+1. TF Job:
+============
+This job involves calculation of word count and document size. The input to this job is of the format ( (word@document) , docSize ). In the map section of this job, I have made use of the mapToPair method which returns a new RDD by applying the PairFunction to all elements in this RDD. In the PairFunction, I am obtaining the docSize value by processing the input and formulate the required output of format 1/docSize. Post this I am creating the required output tuple of format  ( (word@document) , (1/docSize) ), which is returned by this function. 
+
+Post this, in the reduce section of this job, I have made use of the reduceByKey method which merges the values for each key using an associative and commutative reduce function. I have used Function2() in this case, which takes 2 string arguments as input and returns a string argument as the output. I have processed the input from the above map function, reduced for each key, and then the final output of format (wordCount/docSize) is being returned. 
+
+2. ICF Job:
+============
+This job involves gathering all data needed for ICF calculation from tfRDD, which is the RDD generated in the above job. The input to this job is of the format ( (word@document) , (wordCount/docSize) ). Similar to the above job, in the map section of this job I have made use of the mapToPair method which returns a new RDD by applying the PairFunction to all elements in this RDD. In the PairFunction, I am obtaining the word and document values from the input in order to be used in the output, post which I am formulating the output of format (1/document). Post this I am creating the required output tuple of format ( word , (1/document) ), which is returned by this function.
+
+Post this, in the reduce section of this job, I have made use of the reduceByKey method which merges the values for each key using an associative and commutative reduce function. I have used Function2() in this case, which takes 2 string arguments as input and returns a string argument as the output. I have processed the input from the above map function by splitting the 2 input strings at "/", and performing a reduction by calculating number of documents that have a particular word, by adding the numerators of the 2 input strings. Post this, I am formulating the output of required format (numDocsWithWord/document1,document2...), which is being returned.
+
+Next, I am making use of the flatMapToPair method, which returns a new RDD by first applying PairFlatMapFunction to all elements of this RDD, and then flattening the results. The main goal of this map function is to produce an output of format ( (word@document) , (numDocs/numDocsWithWord) ), which I am obtaining by processing the input to obtain a word from the input tuple, along with (numDocsWithWord/document1,document2...). I am then splitting (numDocsWithWord/document1,document2...) at "/" to obtain the numerator and denominator seperately. Post this, for every document in the denominator, I am formulating the output of required format ( (word@document) , (numDocs/numDocsWithWord) ), which is being appended to an ArrayList. This ArrayList is then being returned. 
+
+3. TF * ICF Job:
+=================
+This job involves the calculation of final TFICF value from tfRDD and icfRDD, which are obtained from the above 2 jobs. This job takes ( (word@document) , (wordCount/docSize) ) as the input from tfRDD and the map function produces ( (word@document) , TF ). Next, this job also takes ( (word@document) , (numDocs/numDocsWithWord) ) as the input from icfRDD, and the map function produces ( (word@document) , ICF ). I have used the mapToPair method and PairFunction for ICF calculation, where I have calculated ICF as Math.log10((numDocs + 1)/(num_docs_with_word + 1)). 
+
+The union section calculates TF * ICF, where I have used reduceByKey method and Function2(). Finally, the map section produces ( (document@word) , TFICF ), where I have processed the input to obtain the required values for the final output, which is returned. 
+
