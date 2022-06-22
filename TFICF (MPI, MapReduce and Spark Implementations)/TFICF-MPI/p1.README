@@ -1,0 +1,30 @@
+Single Author info:
+rbraman Radhika B Raman
+
+Explanation of my implementation of the MPI version of TFICF:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--> Step-by-step implementation:
+---------------------------------
+- In the main() function, the root/master node initially counts the total number of documents that are present. Once this is calculated, the root node communicates the numDocs value to all other nodes/workers using an MPI_Send() call. All nodes apart from the root/master node receive the numDocs value via an MPI_Recv() call. Post this, I have implemented an MPI_Barrier() in order to wait and ensure that all processes have obtained the numDocs value from root node.
+
+- Next, all the worker nodes process their respective documents. In my implementation, if the number of documents is evenly divisible by the number of worker nodes, then all the worker nodes will process equal number of documents. Else, the documents are distributed accordingly. For example, if there are 3 worker nodes and 8 documents, as per my implementation, worker 1 would be responsible for doc1, doc4 and doc7. Worker 2 would be responsible for doc2, doc5 and doc8. Worker 3 would be responsible for doc3 and doc6.
+
+- Each worker node would calculate the document size, post which it would update the TFICF object for each word accordingly. Post this, I have implemented an MPI_Barrier() in order to wait and ensure that all processes have updated the TFICF structure for every word in their respective documents.
+
+- Next, I have made each of the worker nodes communicate their respective count of unique words to the other worker nodes using MPI-Irecv() and MPI_Isend() blocking calls. I have implemented an MPI_Waitall() after this to ensure that are non-blocking calls are completed before proceeding further. After this, each worker node computes the total number of unique words in all other worker nodes (excluding itself).
+
+- After this, I have created a custom MPI datatype that I am using in order to collect details of all unique words from other worker nodes. Each worker node sends the details of each unique word in its set of documents, one at a time to the remaining worker nodes, using MPI_Isend(). The other worker nodes recieve these details into an array using MPI_Irecv(). I have implemented an MPI_Waitall() after this to ensure that are non-blocking calls are completed before proceeding further.
+
+- Next, each worker node loops through the above received unique words of other worker nodes, compares each word with the current node's word, and updates the current node's numDocsWithWord attribute accordingly. The TFICF structure object is then updated for every word to reflect the new numDocsWithWord value. Post this, each worker node computes the TF and ICF values, and the final TFICF values. I have implemented an MPI_Barrier() in order to wait and ensure that all processes complete till this stage before proceeding further. 
+
+- I have created another custom MPI datatype that I am using in order to gather TFICF details from the worker nodes at the root node. I have used Igatherv() for this purpose. Once the root node has all the required TFICF information, it sorts the strings and prints them out to a file.
+
+--> How to add more parallelism:
+---------------------------------
+In my opinion, more parallelism can be added to the code by making use of libraries such as OpenMP (shared memory) and its pragma directives in order to make use of all processors in a node, instead of only one processor per MPI node. The OpenMP directives with respect to for loops etc, can be leveraged in the TFICF MPI program for loop level parallelism, so that all cores/processors in a node are utilised, rather than just one processor per node. 
+
+--> Comparison of my MPI implementation with MapReduce and Spark implementations done previously:
+---------------------------------------------------------------------------------------------------
+The MapReduce and Spark implementations done previously involved jobs in order to compute the TF, ICF and TFICF values. I made use of Mappers and Reducers for computation of these values, where a map job involved applying a function on an array, and the reduce job performs reduction of the above array into a single value. The input in case of MapReduce and Spark are key value pairs, that are distributed among the nodes in the hadoop cluster. Parallel map tasks process the distributed data on machines in a cluster. The output of the map function then serves as input for the reduce stage. The reduce task combines the result into a particular key-value pair output and writes the data to HDFS. MPI on the other hand involves constant parallel communication between nodes regarding their computations. Data is stored in the form of structure objects and loops are used in order to perform computations. 
+
