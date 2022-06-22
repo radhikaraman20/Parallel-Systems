@@ -1,0 +1,14 @@
+Group info:
+psomash Prakruthi Somashekarappa
+rbraman Radhika B Raman
+srames22 Srivatsan Ramesh
+
+Explanation of plots:
+-----------------------
+As mentioned in the assignment question, we have plotted 3 graphs (fn-100.png, fn-1000.png, fn-10000.png), that depict the function sin(x) and its derivative cos(x), using gnuplot. We have tested our program p2_mpi.c for different gridpoint values (100, 1000 and 10000), and plotted the above graphs using the obtained values.
+
+On analysing the 3 plots and relative accuracy, it can be observed that the accuracy of the sin(x) curve and the curve of its derivative cos(x) increases as the number of gridpoints increases. In other words, the sin(x) and cos(x) curves become more well-defined as the number of gridpoints increases (interval size between consecutive gridpoints reduces). This is in-line with derivatives and their behavior with respect to accuracy i.e, as the interval size or delta x reduces, the approximation of the function becomes more accurate, since the interval/grid is divided into smaller sub-intervals. 
+
+With respect to performance of the parallel program p2_mpi.c, perf.png depicts 4 subplots that show the the number of processes being used versus the performance of the program (speedup). We have calculated speedup as the time taken by the serial program divided by the time taken by the parallel program, for each version (00, 01, 10 and 11), and plotted a graph for each version respectively. 
+
+On analysing the 4 subplots in perf.png, it can be seen that the speedup parameter increases as the number of processes increase, until an upper limit, post which the speedup reduces. Ideally, as per Amdahl's law, the overall performance improvement gained by optimizing a single part of a system is limited by the fraction of time that the improved part is actually used. In other words, the curve for Amdahl's law shows an increase in speedup as the number of processors increases. However, in reality, the speedup would increase till an upper limit, post which there is a steady reduction. A similar trend can be seen in our 4 subplots, where in the speedup increases and then reduces. The reduction in speedup as the number of processors increases is due to the increase in communication that would have to take place between higher number of processors, which could lead to performance reduction. 
